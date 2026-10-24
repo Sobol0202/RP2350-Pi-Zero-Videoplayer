@@ -1,0 +1,40 @@
+diff --git a/src/frank_serialiser.c b/src/frank_serialiser.c
+index 1dbe004..a89d2ca 100644
+--- a/src/frank_serialiser.c
++++ b/src/frank_serialiser.c
+@@ -67,6 +67,11 @@ static void dvi_configure_pad(uint gpio, bool invert) {
+  * pin to be even (PWM slice constraint).
+  */
+ void dvi_serialiser_init(struct dvi_serialiser_cfg *cfg) {
++#if defined(PLATFORM_Z0)
++    if (pio_set_gpio_base(cfg->pio, 16) != PICO_OK) {
++        panic("PIO GPIO base configuration failed");
++    }
++#endif
+ #if DVI_SERIAL_DEBUG
+ 	uint offset = pio_add_program(cfg->pio, &dvi_serialiser_debug_program);
+ #else
+diff --git a/src/frank_serialiser.pio b/src/frank_serialiser.pio
+index 7f64ea6..7d7ea97 100644
+--- a/src/frank_serialiser.pio
++++ b/src/frank_serialiser.pio
+@@ -44,8 +44,17 @@
+ #include "frank_dvi_config.h"
+ 
+ static inline void dvi_serialiser_program_init(PIO pio, uint sm, uint offset, uint data_pins, bool debug) {
+-    pio_sm_set_pins_with_mask(pio, sm, 2u << data_pins, 3u << data_pins);
+-    pio_sm_set_pindirs_with_mask(pio, sm, ~0u, 3u << data_pins);
++pio_sm_set_pins_with_mask64(
++    pio, sm,
++    2ull << data_pins,
++    3ull << data_pins
++);
++
++pio_sm_set_pindirs_with_mask64(
++    pio, sm,
++    3ull << data_pins,
++    3ull << data_pins
++);
+     pio_gpio_init(pio, data_pins);
+     pio_gpio_init(pio, data_pins + 1);
+ 

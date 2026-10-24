@@ -1,0 +1,28 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index cfdbb81..9c2f08e 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -140,6 +140,17 @@ if(HDMI_DRIVER STREQUAL "HDMI_PIO_AUDIO")
+         set(FRANK_HDMI_SM_CLKDIV "1" CACHE STRING "" FORCE)
+     endif()
+     add_subdirectory(frank-hdmi-sound/src)
++	
++	if(PLATFORM STREQUAL "z0")
++    target_compile_definitions(frank_hdmi_sound INTERFACE
++        FRANK_HDMI_PIN_CLK=38
++        FRANK_HDMI_PIN_D0=36
++        FRANK_HDMI_PIN_D1=34
++        FRANK_HDMI_PIN_D2=32
++        FRANK_HDMI_INVERT_DIFFPAIRS=0
++        PICO_PIO_USE_GPIO_BASE=1
++    )
++endif()
+ 
+     # Use the STANDARD 32000 Hz HDMI audio rate (CEA-861).  Non-standard rates
+     # such as the BBC SN76489's native 31250 Hz are mishandled by real HDMI
+diff --git a/frank-hdmi-sound b/frank-hdmi-sound
+--- a/frank-hdmi-sound
++++ b/frank-hdmi-sound
+@@ -1 +1 @@
+-Subproject commit 388d8798d2ff7cb0a2071fa0412db1239c684bd2
++Subproject commit 388d8798d2ff7cb0a2071fa0412db1239c684bd2-dirty
