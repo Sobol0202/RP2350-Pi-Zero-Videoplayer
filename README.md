@@ -47,7 +47,7 @@ Voraussetzungen: Pico SDK 2.3.1, Arm GNU Toolchain für `arm-none-eabi`, CMake, 
 
 ### 1. Treiber ins Repository übernehmen
 
-Da die HDMI-Anpassungen auf einem lokal bereits funktionierenden FRANK-Klon basieren, sollte **dieser Stand** verwendet werden. Das Skript übernimmt ausschließlich die benötigten Treiber und Board-Dateien, setzt gegebenenfalls die beiden Z0-PIO-Korrekturen und kopiert keine Git-Metadaten:
+Das Skript übernimmt ausschließlich die benötigten Treiber und Board-Dateien, setzt gegebenenfalls die beiden Z0-PIO-Korrekturen und kopiert keine Git-Metadaten:
 
 ```bash
 cd RP2350_HDMI_Testplayer_GitHub
@@ -60,20 +60,16 @@ Alternativ ohne vorhandenen Klon:
 python tools/fetch_frank.py
 ```
 
-Der Downloadpfad verwendet den aktuellen `main`-Stand von FRANK. Für einen nachweislich identischen Build den Commit mit `--ref <COMMIT>` festlegen oder den erprobten lokalen Quellstand exportieren. Versionsangaben der kopierten Treiber werden in `third_party/frank-micro/SOURCE.md` dokumentiert.
-
-**Für GitHub:** `third_party/frank-micro/` nach dem Export mit einchecken. Dadurch sind sämtliche von der Firmware benötigten FRANK-Quellen im Repository vorhanden. Das Pico SDK und die Compiler bleiben externe Werkzeuge.
+Der Downloadpfad verwendet den aktuellen `main`-Stand von FRANK. 
 
 ### 2. Umgebung konfigurieren
 
-Keine festen Benutzerpfade in den Projektdateien. Das SDK wird über `PICO_SDK_PATH` gefunden; bei Bedarf wird die ARM-Toolchain über `PICO_TOOLCHAIN_PATH` gesetzt. Beispiel mit Platzhalter `USER`:
+Das SDK wird über `PICO_SDK_PATH` gefunden; bei Bedarf wird die ARM-Toolchain über `PICO_TOOLCHAIN_PATH` gesetzt.
 
 ```bash
 export PICO_SDK_PATH="C:/Users/USER/pico-sdk-2.3.1"
 export PICO_TOOLCHAIN_PATH="C:/Tools/arm-gnu-toolchain-arm-none-eabi"
 ```
-
-**Hinweis:** `USER` steht nur für einen Platzhalter. Wird eine andere Ordnerstruktur verwendet, sind ausschließlich die beiden Variablen entsprechend anzupassen. Im Projekt selbst sind keine persönlichen absoluten Pfade hinterlegt. Ninja sowie der native Compiler (`gcc`/`g++`) müssen im `PATH` stehen.
 
 ### 3. Firmware bauen
 
@@ -95,7 +91,7 @@ Die Wechselerkennung ist auf 40 ms entprellt. Die Datei wird im Videomodus von A
 
 ## Eigene Videodatei konvertieren
 
-Das Quellvideo selbst gehört **nicht** ins Repository. Der Konverter akzeptiert gängige Formate, sofern FFmpeg sie dekodieren kann. Die Beispielstartzeit von 90 Sekunden ist frei wählbar.
+Der Konverter akzeptiert gängige Formate, sofern FFmpeg sie dekodieren kann. Die Beispielstartzeit von 90 Sekunden ist frei wählbar.
 
 ```bash
 python tools/create_test_loop.py "QUELLE.mp4" --start 00:01:30 --seconds 120 --output TEST.LOOP
